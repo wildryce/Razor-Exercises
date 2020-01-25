@@ -1,8 +1,89 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = string.Format("Razor - {0}", "Exercise 01");
+    Page.Title = string.Format("Razor - {0}", "Exercise 01: Basic form Processing");
+    var customername = Request.Form["dataentry"];
+    var thebutton = Request.Form["theButton"];
+    string choices = "";
 }
 
 @section banner {
     <h1>@Page.Title</h1>
 }
+
+@if (IsPost)
+{
+    choices = "";
+    choices = Request.Form["GameGroup"];
+    thebutton = Request.Form["theButton"];
+    if (thebutton.Equals("Reset", StringComparison.OrdinalIgnoreCase)) //pressed reset
+    {
+        customername = "";
+        choices = "";
+    }
+    else //pressed submit
+    {
+        if (string.IsNullOrEmpty(customername))
+        {
+            <div>
+                <p style="color:firebrick">You don't have a name?</p>
+            </div>
+            if (choices.IsEmpty()) 
+            {
+                choices = "";
+            }
+        }
+        else if (choices.IsEmpty())
+        {
+            <p style="color:firebrick">No meal items for you?</p>
+            choices = "";
+        }
+        else
+        {
+            //for a checkbox list, your choices will be a set of strings
+            //separated by a delimiter (in this case is a comma)
+            //to divide up this set of strings use the .Split(delimiter) method
+            //to process the collection of strings in choices, consider using foreach
+
+            <p>
+                @customername, I see you have the following meal entries:
+                <ul>
+                    @foreach (var food in choices.Split(','))
+                    {
+                        <li>@food</li>
+                    }
+                </ul>
+            </p>
+
+        }
+    }
+}
+else
+{
+    choices = "";
+}
+
+<form id="theform" method="post">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="offset-1">
+                <label id="label1" for="dataentry">Customer Name:</label><br />
+                <input type="text" id="dataentry" name="dataentry" value="@customername" />
+            </div>
+        </div>
+        <div class="col-md-9">
+            <label id="lblGameGroup"><strong>Choose your meal items:</strong></label><br />
+            <input type="checkbox" id="GameGroup" name="GameGroup" value="Steak"
+                   @(Array.IndexOf(choices.Split(','), "Steak") >= 0 ? "checked" : "") />Steak<br />
+            <input type="checkbox" id="GameGroup" name="GameGroup" value="Seafood"
+                   @(Array.IndexOf(choices.Split(','), "Seafood") >= 0 ? "checked" : "") />Seafood<br />
+            <input type="checkbox" id="GameGroup" name="GameGroup" value="Vegetables"
+                   @(Array.IndexOf(choices.Split(','), "Vegetables") >= 0 ? "checked" : "") />Vegetables<br />
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
+        <button type="submit" id="theButton" name="theButton" value="reset" class="btn btn-light">Reset</button>
+    </div>
+</form>
