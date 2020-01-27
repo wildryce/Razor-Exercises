@@ -69,11 +69,6 @@ else
                 <label id="label1" for="dataentry">Customer Name:</label><br />
                 <input type="text" id="dataentry" name="dataentry" value="@customername" />
             </div>
-
-            <br /><br />
-
-            <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
-            <button type="submit" id="theButton" name="theButton" value="reset" class="btn btn-light">Reset</button>
         </div>
 
         <div class="col-md-9">
@@ -84,8 +79,15 @@ else
                    @(Array.IndexOf(choices.Split(','), "Seafood") >= 0 ? "checked" : "") />Seafood<br />
             <input type="checkbox" id="FoodGroup" name="FoodGroup" value="Vegetables"
                    @(Array.IndexOf(choices.Split(','), "Vegetables") >= 0 ? "checked" : "") />Vegetables<br />
-        </div>
+        </div>        
     </div>
 
-    
+    <div class="row">
+        <div class="col-3">
+            <div class="offset-1">
+                <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
+                <button type="submit" id="theButton" name="theButton" value="reset" class="btn btn-light">Reset</button>
+            </div>
+        </div>
+    </div>
 </form>
