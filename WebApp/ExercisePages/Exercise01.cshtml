@@ -13,7 +13,7 @@
 @if (IsPost)
 {
     choices = "";
-    choices = Request.Form["GameGroup"];
+    choices = Request.Form["FoodGroup"];
     thebutton = Request.Form["theButton"];
     if (thebutton.Equals("Reset", StringComparison.OrdinalIgnoreCase)) //pressed reset
     {
@@ -69,21 +69,23 @@ else
                 <label id="label1" for="dataentry">Customer Name:</label><br />
                 <input type="text" id="dataentry" name="dataentry" value="@customername" />
             </div>
+
+            <br /><br />
+
+            <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
+            <button type="submit" id="theButton" name="theButton" value="reset" class="btn btn-light">Reset</button>
         </div>
+
         <div class="col-md-9">
-            <label id="lblGameGroup"><strong>Choose your meal items:</strong></label><br />
-            <input type="checkbox" id="GameGroup" name="GameGroup" value="Steak"
+            <label id="lblFoodGroup"><strong>Choose your meal items:</strong></label><br />
+            <input type="checkbox" id="FoodGroup" name="FoodGroup" value="Steak"
                    @(Array.IndexOf(choices.Split(','), "Steak") >= 0 ? "checked" : "") />Steak<br />
-            <input type="checkbox" id="GameGroup" name="GameGroup" value="Seafood"
+            <input type="checkbox" id="FoodGroup" name="FoodGroup" value="Seafood"
                    @(Array.IndexOf(choices.Split(','), "Seafood") >= 0 ? "checked" : "") />Seafood<br />
-            <input type="checkbox" id="GameGroup" name="GameGroup" value="Vegetables"
+            <input type="checkbox" id="FoodGroup" name="FoodGroup" value="Vegetables"
                    @(Array.IndexOf(choices.Split(','), "Vegetables") >= 0 ? "checked" : "") />Vegetables<br />
         </div>
     </div>
 
-    <br />
-    <div class="row">
-        <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
-        <button type="submit" id="theButton" name="theButton" value="reset" class="btn btn-light">Reset</button>
-    </div>
+    
 </form>
