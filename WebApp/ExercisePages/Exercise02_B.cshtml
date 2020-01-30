@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - {0}", "Exercise 02");
+    var cid = Request.QueryString["cid"];
+
+    if (string.IsNullOrEmpty(cid))
+    {
+        Response.Redirect("SimpleQueryLikePage1.cshtml");
+    }
+
+    //this page will access the database when the submit button is pressed
+    //the project needs access to 2 more NuGet packages
+    //Microsoft.Aspnet.WebPages.Data
+    //Microsoft.Aspnet.Webpages.WebData
+
+    //connect to the database
+    //use the name attribute off your web connection string
+
+    var db = Database.Open("CHINOOK");
+
+    string sqlcommand1 = "SELECT ArtistId, Name FROM Artists WHERE Name LIKE @0 ORDER BY Name";
+    var partialstring = "%" + cid + "%";
+    var results = db.Query(sqlcommand1, partialstring);
+    if (results.Count() == 0)
+    {
+        <p style="color:firebrick">There was no record returned from the Data Base</p>
+        Response.Redirect("Exercise02_B.cshtml?");
+    }
+    else
+    {
+        <p style="color:darkgreen">There was @results.Count() record/s returned from the Data Base</p>
+    }
+}
+
+@section banner {
+    <h1>@Page.Title</h1>
+}

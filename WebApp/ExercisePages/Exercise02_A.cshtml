@@ -1,0 +1,69 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - {0}", "Exercise 02");
+
+    //input variables for web controls
+    var artistarg = Request.Form["artistArg"];
+    var thebutton = Request.Form["theButton"];
+
+    var db = Database.Open("CHINOOK");
+
+    string sqlcommand1 = "SELECT ArtistId FROM Artists WHERE Name LIKE @0";
+    var partialstring = "%" + artistarg + "%";
+    var results = db.Query(sqlcommand1, partialstring);
+}
+
+@section banner {
+    <h1>@Page.Title</h1>
+}
+
+@if (IsPost)
+{
+    thebutton = Request.Form["theButton"];
+    if (thebutton.Equals("Reset")) //pressed reset
+    {
+        <p style="color:darkblue">The Reset Button was just Pressed</p>
+        artistarg = "";
+    }
+    else //pressed submit
+    {
+        if (string.IsNullOrWhiteSpace(artistarg))
+        {
+            <p style="color:firebrick">Please enter a name..</p>
+        }
+        else if (results.Count() == 0)
+        {
+            <p style="color:firebrick">There was no record returned from the Data Base</p>
+            artistarg = "";
+        }
+        else
+        {
+            Response.Redirect("Exercise02_B.cshtml?cid=" + artistarg);
+            <p style="color:darkgreen">There was @results.Count() record/s returned from the Data Base</p>
+        }
+    }
+}
+else
+{
+    artistarg = "";
+}
+
+<form id="theform" method="post">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="offset-1">
+                <label id="label1" for="dataentry">Enter a partial artist name:</label><br />
+                <input type="text" id="artistArg" name="artistArg" value="@artistarg" />
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-3">
+            <div class="offset-1">
+                <button type="submit" id="theButton" name="theButton" value="fetch" class="btn btn-primary">Fetch</button>&nbsp;&nbsp;
+                <button type="submit" id="theButton" name="theButton" value="reset" class="btn btn-light">Reset</button>
+            </div>
+        </div>
+    </div>
+</form>
