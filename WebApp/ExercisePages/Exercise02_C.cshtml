@@ -16,16 +16,15 @@
     var firstQuery = db.Query(queryOne, cid);
     var secondQuery = db.Query(queryTwo, cid);
 
-    var gridinstance = new WebGrid(firstQuery, rowsPerPage: 5);
+    var gridinstance = new WebGrid(secondQuery, rowsPerPage: 5);
 }
 
-
 @section banner {
-    <h1>WebGrid Display</h1>
+    <h1>@Page.Title</h1>
 }
 
 <div class="offset-1">
-    <h3>Products for Category: @secondQuery</h3>
+    <h3>Albums of @queryOne</h3>
     <div class="col-11">
         @gridinstance.GetHtml(
             tableStyle: "table table-striped table-bordered table-hover",
@@ -33,25 +32,9 @@
             firstText: "Start",
             lastText: "End",
             columns: gridinstance.Columns(
-               gridinstance.Column(columnName: "ArtistId", header: "ID"),
-               gridinstance.Column(columnName: "Name", header: "Name"),
-               gridinstance.Column(columnName: "UnitPrice", header: "$", canSort: false,
-                    format: (item) => item.UnitPrice.ToString("0.00")),
-               gridinstance.Column(columnName: "UnitsInStock", header: "QoH", canSort: false),
-               gridinstance.Column(columnName: "Discontinued", header: "Disc", canSort: false,
-                    format: @<input type="checkbox" id="Discontinued"
-                                    name="Discontinued" disabled="disabled"
-                                    value="@item.Discontinued"
-                                    @(item.Discontinued == true ? "Checked" : "") />),
-gridinstance.Column(header: "", canSort: false,
-format:@<text>
-                                <a href="~/SamplePages/WebGridDestination.cshtml?pid=@item.ProductID"
-                                   onclick="return confirm('Are you sure you wish to view @item.ProductName ?')">View</a>
-</text>)
-))
+               gridinstance.Column(columnName: "AlbumId", header: "ID"),
+               gridinstance.Column(columnName: "Title", header: "Title", canSort: false),
+               gridinstance.Column(columnName: "ReleaseYear", header: "Released", canSort: false),
+               gridinstance.Column(columnName: "ReleaseLabel", header: "Label", canSort: false)))    
     </div>
 </div>
-
-@section banner {
-    <h1>@Page.Title</h1>
-}

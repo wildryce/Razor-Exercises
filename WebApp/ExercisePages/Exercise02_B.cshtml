@@ -1,10 +1,8 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = string.Format("Razor - {0}", "Exercise 02");
+    Page.Title = string.Format("Razor - {0}", "Exercise 02 B");
 
     var cid = Request.QueryString["cid"];
-
-    var thebutton = Request.Form["theButton"];
 
     if (string.IsNullOrEmpty(cid))
     {
@@ -13,14 +11,14 @@
 
     var db = Database.Open("CHINOOK");
 
-    string sqlcommand1 = "SELECT ArtistId, Name FROM Artists WHERE Name LIKE @0 ORDER BY Name";
+    string sqlcommand1 = "SELECT ArtistId, Name FROM Artists WHERE Name like @0 ORDER BY Name";
     var partialstring = "%" + cid + "%";
     var results = db.Query(sqlcommand1, partialstring);
 
     if (results.Count() == 0)
     {
         <p style="color:firebrick">There was no record returned from the Data Base</p>
-        Response.Redirect("Exercise02_A.cshtml?");
+        Response.Redirect("Exercise02_A.cshtml");
     }
     else
     {
@@ -32,87 +30,48 @@
     <h1>@Page.Title</h1>
 }
 
-<p>IsPost = @IsPost</p>
+@*<p>IsPost = @IsPost</p>*@
 
 @if (IsPost)
-{
-    thebutton = Request.Form["theButton"];
-    var choice = Request.Form["artistsList"];
+{   
+    var choice = Request.Form["dropdownlist"];
 
-    if (thebutton.Equals("reset")) //pressed reset
+    if (choice.Equals("0"))
     {
-        <p style="color:darkblue">The Reset Button was just Pressed</p>
+        <p style="color:firebrick">Please select an artist</p>
     }
     else
     {
-        if (choice.Equals(0))
+        var artistQuery = @"SELECT AlbumId FROM Albums WHERE ArtistId = @0";
+        var artistInfo = db.Query(artistQuery, choice);
+
+        if (artistInfo.Count() == 0)
         {
-            <p style="firebrick">Please select and artist</p>
+            <p style="color:darkturquoise">There are no products for the selected category.</p>
         }
         else
         {
-            var artistQuery = @"SELECT ArtistId FROM Artists Where Name = @0";
-            var artistInfo = db.Query(artistQuery, choice);
-
-            if (artistInfo.Count() == 0)
-            {
-                <p style="color:darkturquoise">There are no products for the selected category.</p>
-            }
-            else
-            {
-                Response.Redirect("Exercise02_C.cshtml?cid=" + choice);
-            }
+            Response.Redirect("Exercise02_C.cshtml?cid=" + choice);
         }
-
     }
-}
-else
-{
 
 }
-
-<div class="row">
-    <div class="col-3">
-        <div class="offset-1">
-            <label id="lblartistsList">Select artist from the list:</label><br />
-            <select id="artistsList" name="ArtistsList">
-                <option value="">select ...</option>
-                @foreach (var artist in results)
-                {
-                    <option value="@artist.ArtistId">@artist.Name</option>
-                }
-            </select>
+<form id="theform" method="post">
+    <div class="row">
+        <div class="col-12">
+            <div class="offset-1">
+                <label id="lblartistsList">Select artist from the list:</label><br />
+                <select id="dropdownlist" name="dropdownlist">
+                    <option value="0">select ...</option>
+                    @foreach (var artist in results)
+                    {
+                        <option value="@artist.ArtistId">@artist.Name</option>
+                    }
+                </select>
+                <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Fetch</button>
+            </div>
         </div>
     </div>
-</div>
+</form>
 
-<br />
 
-<div class="row">
-    <div class="col-3">
-        <div class="offset-1">
-            <button type="submit" id="theButton" name="theButton" value="fetch" class="btn btn-primary">Fetch</button>&nbsp;&nbsp;
-            <button type="submit" id="theButton" name="theButton" value="reset" class="btn btn-light">Reset</button>
-        </div>
-    </div>
-</div>
-
-@*<table>
-        <thead>
-            <tr>
-                <br />
-                <th>ID</th>
-                <th>Artist Name</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var row in results)
-            {
-                <tr>
-                    <td>@row.ArtistId</td>
-                    <td>@row.Name</td>
-                </tr>
-            }
-        </tbody>
-    </table>*@
