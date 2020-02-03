@@ -11,12 +11,14 @@
 
     //use data to lookup products
     var db = Database.Open("CHINOOK");
-    var queryOne = @"SELECT Name FROM Artists WHERE ArtistId = @0";
-    var queryTwo = @"SELECT AlbumId, Title, ReleaseYear, ReleaseLabel FROM Albums Where ArtistId = @0 ORDER BY Title";
-    var firstQuery = db.Query(queryOne, cid);
-    var secondQuery = db.Query(queryTwo, cid);
 
-    var gridinstance = new WebGrid(secondQuery, rowsPerPage: 5);
+    var queryOne = @"SELECT Name FROM Artists WHERE ArtistId = @0";
+    var queryTwo = @"SELECT AlbumId, Title, ReleaseYear, ReleaseLabel FROM Albums Where ArtistId = @0 ORDER BY AlbumId";
+
+    var artistQuery = db.QueryValue(queryOne, cid);
+    var albumQuery = db.Query(queryTwo, cid);
+
+    var gridinstance = new WebGrid(albumQuery, rowsPerPage: 10);
 }
 
 @section banner {
@@ -24,7 +26,7 @@
 }
 
 <div class="offset-1">
-    <h3>Albums of @queryOne</h3>
+    <h3>Albums of @artistQuery</h3>
     <div class="col-11">
         @gridinstance.GetHtml(
             tableStyle: "table table-striped table-bordered table-hover",
@@ -33,8 +35,8 @@
             lastText: "End",
             columns: gridinstance.Columns(
                gridinstance.Column(columnName: "AlbumId", header: "ID"),
-               gridinstance.Column(columnName: "Title", header: "Title", canSort: false),
-               gridinstance.Column(columnName: "ReleaseYear", header: "Released", canSort: false),
-               gridinstance.Column(columnName: "ReleaseLabel", header: "Label", canSort: false)))    
+               gridinstance.Column(columnName: "Title", header: "Title"),
+               gridinstance.Column(columnName: "ReleaseYear", header: "Released"),
+               gridinstance.Column(columnName: "ReleaseLabel", header: "Label")))    
     </div>
 </div>
