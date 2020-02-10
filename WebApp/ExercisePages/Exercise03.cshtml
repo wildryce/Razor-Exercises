@@ -38,15 +38,15 @@
         Validator.StringLength(160, 0, "Title name is limited to 160 characters"));
 
     Validation.Add("ArtistList",
-            Validator.Required("Artist selection is required"));
+        Validator.Range(1, artistList.Count, "Artist is required"));
 
     Validation.Add("ReleaseYear",
+        Validator.Required("Release Year is required"),
         Validator.Integer("Year is out of range"),
         Validator.Range(1950, DateTime.Today.Year, "Year is out of range, 1950 to today"));
 
     Validation.Add("ReleaseLabel",
-        Validator.Required("Label is required"),
-        Validator.StringLength(50, 1, "Label is limited to 50 characters"));
+        Validator.StringLength(50, 0, "Label is limited to 50 characters"));
 
 }
 
@@ -54,14 +54,12 @@
     <h1>@Page.Title</h1>
 }
 
-<p>@IsPost</p>
-
 @if (IsPost)
 {
     title = Request.Form["Title"];
     artistId = Request.Form["ArtistList"];
-    releaseYear = Request.Form["Year"];
-    releaseLabel = Request.Form["Label"];
+    releaseYear = Request.Form["ReleaseYear"];
+    releaseLabel = Request.Form["ReleaseLabel"];
     var theButton = Request.Form["thebutton"];
 
     if (thebutton.Equals("clear"))
@@ -73,18 +71,15 @@
     }
     else
     {
-        <p>Step 1: Button</p>
         if (Validation.IsValid())
         {
-            <p>Step 2: Validated</p>
             try
             {
 
                 db.Execute(InfoQuery, title,
                     artistId.Equals("0") ? null : artistId,
-                    string.IsNullOrEmpty(releaseYear) ? "1950" : releaseYear,
+                    string.IsNullOrEmpty(releaseYear) ? null : releaseYear,
                     string.IsNullOrEmpty(releaseLabel) ? null : releaseLabel);
-                <p>Step 3: Executed</p>
             }
             catch (Exception ex)
             {
@@ -110,25 +105,26 @@ else
             <label class="label" for="Title">Title:</label>&nbsp;&nbsp;
             <span>@Html.TextBox("Title", title)</span>
         </div>
+
         <div class="row offset-1">
             <label class="label" for="ArtistList">Artist:</label>&nbsp;&nbsp;
             <span>@Html.DropDownList("ArtistList", artistList)</span>
         </div>
+
         <div class="row offset-1">
             <label class="label" for="ReleaseYear">Year:</label>&nbsp;&nbsp;
             <span>@Html.TextBox("ReleaseYear", releaseYear)</span>
         </div>
+
         <div class="row offset-1">
             <label class="label" for="ReleaseLabel">Label:</label>&nbsp;&nbsp;
             <span>@Html.TextBox("ReleaseLabel", releaseLabel)</span>
         </div>
 
-        <div class="row">
+        <div class="row offset-1">
             <div class="col-3">
-                <div class="offset-1">
-                    <button type="submit" id="theButton" name="theButton" value="add" class="btn btn-primary">Add</button>&nbsp;&nbsp;
-                    <button type="submit" id="theButton" name="theButton" value="clear" class="btn btn-light">Clear</button>
-                </div>
+                <button type="submit" id="theButton" name="theButton" value="add" class="btn btn-primary">Add</button>&nbsp;&nbsp;
+                <button type="submit" id="theButton" name="theButton" value="clear" class="btn btn-light">Clear</button>
             </div>
         </div>
     </form>
