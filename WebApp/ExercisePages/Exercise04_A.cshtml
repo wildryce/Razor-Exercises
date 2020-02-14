@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - {0}", "Exercise 04");
+
+    //input variables for web controls
+    var albumarg = Request.Form["albumArg"];
+    var thebutton = Request.Form["theButton"];
+
+    var db = Database.Open("CHINOOK");
+
+    string findAlbumQuery = "SELECT AlbumId FROM Albums WHERE Title LIKE @0";
+    string albumQuery = "SELECT AlbumId, Title, ArtistId, ReleaseYear, ReleaseLabel FROM Albums WHERE AlbumId = @0";
+
+    string albumString = "%" + albumarg + "%";
+
+    string updateOrDelete = "";
+
+    var results = db.Query(findAlbumQuery, albumString);
+}
+
+@section banner {
+    <h1>@Page.Title</h1>
+}
+
+@*<p>IsPost = @IsPost</p>*@
+
+@if(IsPost)
+{
+    thebutton = Request.Form["theButton"];
+    if(thebutton.Equals("reset")) //pressed reset
+    {
+        albumarg = "";
+    }
+    else if(thebutton.Equals("delete"))
+    {
+
+        if(string.IsNullOrWhiteSpace(albumarg))
+        {
+            <p style="color:firebrick">Please enter a name..</p>
+        }
+        else
+        {
+            updateOrDelete = "delete";
+            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "?option=" + updateOrDelete);
+            
+        }
+    }
+    else //pressed update
+    {
+        if(string.IsNullOrWhiteSpace(albumarg))
+        {
+            <p style="color:firebrick">Please enter a name..</p>
+        }
+        else if(results.Count() == 0)
+        {
+            <p style="color:firebrick">There was no record returned from the Data Base</p>
+            albumarg = "";
+        }
+        else
+        {
+            updateOrDelete = "update";
+            <p>@results.Count()</p>
+            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "?option=" + updateOrDelete);
+            <p style="color:darkgreen">There was @results.Count() record/s returned from the Data Base</p>
+        }
+    }
+}
+else
+{
+    albumarg = "";
+}
+
+<form id="theform" method="post">
+    <div class="row">
+        <div class="col-6">
+            <div class="offset-1">
+                <label id="label1" for="dataentry">Enter a partial album name:</label><br />
+                <input type="text" id="albumArg" name="albumArg" value="@albumarg" />
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-6">
+            <div class="offset-1">
+                <button type="submit" id="theButton" name="theButton" value="reset" class="btn btn-primary">Reset</button>&nbsp;&nbsp;&nbsp;
+                <button type="submit" id="theButton" name="theButton" value="update" class="btn btn-light">Update</button>
+                <button type="submit" id="theButton" name="theButton" value="delete" class="btn btn-light">Delete</button>
+
+            </div>
+        </div>
+    </div>
+</form>
