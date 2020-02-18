@@ -13,8 +13,6 @@
 
     string albumString = "%" + albumarg + "%";
 
-    string updateOrDelete = "";
-
     var results = db.Query(findAlbumQuery, albumString);
 }
 
@@ -40,8 +38,7 @@
         }
         else
         {
-            updateOrDelete = "delete";
-            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=" + updateOrDelete);
+            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=delete");
             
         }
     }
@@ -58,9 +55,8 @@
         }
         else
         {
-            updateOrDelete = "update";
             <p>@results.Count()</p>
-            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=" + updateOrDelete);
+            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=update");
             <p style="color:darkgreen">There was @results.Count() record/s returned from the Data Base</p>
         }
     }

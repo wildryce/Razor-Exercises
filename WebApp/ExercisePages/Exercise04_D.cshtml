@@ -12,11 +12,10 @@
 
     var db = Database.Open("CHINOOK");
 
-    string findSortQuery = "SELECT AlbumId, Title FROM Albums WHERE Title like @0 ORDER BY Title";
+    string findSortQuery = "SELECT AlbumId, Title FROM Albums WHERE AlbumId = @0";
     string deleteQuery = "DELETE Albums WHERE AlbumId = @0";
 
-    var partialstring = "%" + cid + "%";
-    var results = db.Query(findSortQuery, partialstring);
+    var results = db.Query(findSortQuery, cid);
 
     if(results.Count() == 0)
     {
@@ -33,7 +32,13 @@
     <h1>@Page.Title</h1>
 }
 
-<h4>Are you sure you want to delete album @results</h4>
+@foreach(var info in results) 
+{
+<div class="offset-1">
+    <p class="font-weight-bold">Are you sure you want to delete album "@info.Title"?</p>
+</div>
+}
+
 @if(IsPost)
 {
     thebutton = Request.Form["theButton"];
@@ -42,17 +47,21 @@
     {
         Response.Redirect("Exercise04_A.cshtml");
     }
-    else
+    else if (thebutton.Equals("confirm"))
     {
-        //db.Execute(deleteQuery, cid);
+        db.Execute(deleteQuery, cid);
         <p style="color:firebrick">Album Deleted!</p>
     }
+}
+else
+{
+
 }
 <form id="theform" method="post">
     <div class="row">
         <div class="col-12">
             <div class="offset-1">
-                <button type="submit" id="theButton" name="theButton" value="confirm" class="btn btn-danger">Delete</button>
+                <button type="submit" id="theButton" name="theButton" value="confirm" class="btn btn-danger">Delete</button>&nbsp;&nbsp;
                 <button type="submit" id="theButton" name="theButton" value="cancel" class="btn btn-light">Cancel</button>
             </div>
         </div>
