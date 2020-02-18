@@ -41,7 +41,7 @@
         else
         {
             updateOrDelete = "delete";
-            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "?option=" + updateOrDelete);
+            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=" + updateOrDelete);
             
         }
     }
@@ -60,7 +60,7 @@
         {
             updateOrDelete = "update";
             <p>@results.Count()</p>
-            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "?option=" + updateOrDelete);
+            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=" + updateOrDelete);
             <p style="color:darkgreen">There was @results.Count() record/s returned from the Data Base</p>
         }
     }

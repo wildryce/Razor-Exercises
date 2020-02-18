@@ -5,18 +5,20 @@
     var cid = Request.QueryString["cid"];
     var selection = Request.QueryString["option"];
     var thebutton = Request.Form["theButton"];
+    var choice = Request.Form["dropdownlist"];
 
     if(string.IsNullOrEmpty(cid))
     {
         Response.Redirect("Exercise04_A.cshtml?");
     }
 
+    <h3>@selection album</h3>
+
     var db = Database.Open("CHINOOK");
 
     string albumQuery = "SELECT AlbumId, Title, ArtistId, ReleaseYear, ReleaseLabel FROM Albums WHERE AlbumId = @0";
 
     string findSortQuery = "SELECT AlbumId, Title FROM Albums WHERE Title like @0 ORDER BY Title";
-    string deleteQuery = "DELETE Albums WHERE AlbumId = @0";
 
     var partialstring = "%" + cid + "%";
     var results = db.Query(findSortQuery, partialstring);
@@ -24,7 +26,7 @@
     if(results.Count() == 0)
     {
         <p style="color:firebrick">There was no record returned from the Data Base @cid</p>
-        //Response.Redirect("Exercise04_A.cshtml");
+        Response.Redirect("Exercise04_A.cshtml");
     }
     else
     {
@@ -36,11 +38,10 @@
     <h1>@Page.Title</h1>
 }
 
-@*<p>IsPost = @IsPost</p>*@
-
 @if(IsPost)
 {
-    var choice = Request.Form["dropdownlist"];
+    choice = Request.Form["dropdownlist"];
+    thebutton = Request.Form["theButton"];
 
     if(choice.Equals("0"))
     {
@@ -50,28 +51,19 @@
     {
         var albumInfo = db.Query(albumQuery, choice);
 
-        if (thebutton.Equals("delete"))
-        {
-            db.Execute(deleteQuery, cid);
-            <p style="color:firebrick">Album Deleted!</p>
-        }
         if(albumInfo.Count() == 0)
         {
             <p style="color:darkturquoise">There is no information for this album.</p>
         }
         else
         {
-            if (selection == "update")
+            if(selection == "update")
             {
                 Response.Redirect("Exercise04_C.cshtml?cid=" + choice);
             }
             else
             {
-                <div class="offset-1">
-                    <button type="submit" id="theButton" name="theButton" value="confirm" class="btn btn-danger">Click to confirm</button>
-                    <br /><br />
-                </div>
-
+                Response.Redirect("Exercise04_D.cshtml?cid=" + choice);
             }
 
         }
@@ -90,7 +82,14 @@
                         <option value="@album.AlbumId">@album.Title</option>
                     }
                 </select>
-                <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Fetch</button>
+                @if(selection == "update")
+                {
+                    <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Fetch</button>
+                }
+                else
+                {
+                    <button type="submit" id="theButton" name="theButton" value="delete" class="btn btn-danger">Delete</button>
+                }
             </div>
         </div>
     </div>
