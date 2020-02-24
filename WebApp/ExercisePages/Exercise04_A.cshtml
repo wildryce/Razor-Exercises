@@ -36,10 +36,15 @@
         {
             <p style="color:firebrick">Please enter a name..</p>
         }
+        else if(results.Count() == 0)
+        {
+            <p style="color:firebrick">There was no record returned from the Data Base</p>
+            albumarg = "";
+        }
         else
         {
-            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=delete");
-            
+            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=Delete");
+
         }
     }
     else //pressed update
@@ -56,7 +61,7 @@
         else
         {
             <p>@results.Count()</p>
-            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=update");
+            Response.Redirect("Exercise04_B.cshtml?cid=" + albumarg + "&option=Update");
             <p style="color:darkgreen">There was @results.Count() record/s returned from the Data Base</p>
         }
     }

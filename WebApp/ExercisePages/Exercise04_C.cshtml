@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = string.Format("Razor - {0}", "Exercise 03");
+    Page.Title = string.Format("Razor - {0}", "Exercise 04");
     var thebutton = Request.Form["theButton"];
 
     var title = "";
@@ -65,6 +65,7 @@ Validator.StringLength(160, 0, "Title name is limited to 160 characters"));
 @section banner {
     <h1>@Page.Title</h1>
 }
+
 
 @if(IsPost)
 {

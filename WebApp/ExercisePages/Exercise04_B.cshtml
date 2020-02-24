@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = string.Format("Razor - {0}", "Exercise 04 B");
+    Page.Title = string.Format("Razor - {0}", "Exercise 04");
 
     var cid = Request.QueryString["cid"];
     var selection = Request.QueryString["option"];
@@ -12,7 +12,7 @@
         Response.Redirect("Exercise04_A.cshtml?");
     }
 
-    <h3>@selection album</h3>
+    <h3>@selection Album</h3>
 
     var db = Database.Open("CHINOOK");
 
@@ -57,11 +57,11 @@
         }
         else
         {
-            if(selection == "update")
+            if(selection == "Update")
             {
                 Response.Redirect("Exercise04_C.cshtml?cid=" + choice);
             }
-            else if (selection == "delete")
+            else if (selection == "Delete")
             {
                 Response.Redirect("Exercise04_D.cshtml?cid=" + choice);
             }
@@ -82,7 +82,7 @@
                         <option value="@album.AlbumId">@album.Title</option>
                     }
                 </select>
-                @if(selection == "update")
+                @if(selection == "Update")
                 {
                     <button type="submit" id="theButton" name="theButton" value="submit" class="btn btn-primary">Fetch</button>
                 }

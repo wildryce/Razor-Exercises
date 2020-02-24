@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
-    Page.Title = string.Format("Delete Album");
+    Page.Title = string.Format("Razor - {0}", "Exercise 04");
 
     var cid = Request.QueryString["cid"];
     var thebutton = Request.Form["theButton"];
@@ -20,7 +20,7 @@
     if(results.Count() == 0)
     {
         <p style="color:firebrick">There was no record returned from the Data Base @cid</p>
-        Response.Redirect("Exercise04_B.cshtml");
+        //Response.Redirect("Exercise04_B.cshtml");
     }
     else
     {
@@ -31,6 +31,8 @@
 @section banner {
     <h1>@Page.Title</h1>
 }
+
+<h3>Delete Album</h3><br />
 
 @foreach(var info in results) 
 {
